@@ -15,12 +15,14 @@ public class Scan {
 	public float[] distances = new float[7]; // all in cm, range from ~3 - ~180. "255" equals error.
 	private int[] angles = {-90,-60,-30,0,30,60,90};  
 	private UltrasonicSensor us;
+	public boolean isDone;
 	
 	public Scan() {
 		for (int i = 0; i < distances.length; i++) {
 			distances[i] = 255;
 		}
 		us = new UltrasonicSensor(US_PORT);
+		isDone = false;
 	}
 	
 	public void doScan() {
@@ -36,6 +38,7 @@ public class Scan {
 			System.out.println("Measuring interrupted");
 		} finally {
 			US_MOTOR.rotateTo(0);
+			isDone = true;
 		}
 	}
 

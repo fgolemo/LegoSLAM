@@ -8,8 +8,10 @@ import lejos.pc.comm.NXTCommLogListener;
 import lejos.pc.comm.NXTCommandConnector;
 import lejos.pc.comm.NXTConnector;
 
-public class NXTControl {
+public class NXTControl { //PC USE ONLY
+	
 	private NXTConnector conn;
+	
 	public void init() {
 		conn = new NXTConnector();
 		conn.addLogListener(new NXTCommLogListener() {

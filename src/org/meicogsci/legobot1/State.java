@@ -9,5 +9,7 @@ public class State {
 	
 	public State() {
 		date = new Date();
+		position = new Position();
+		scan = new Scan();
 	}
 }
