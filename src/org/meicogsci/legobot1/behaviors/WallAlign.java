@@ -15,7 +15,11 @@ public class WallAlign implements Behavior {
 	@Override
 	public void action() {
 		bot.nextAction = "";
-		
+		float[] distances = bot.history.states.getLast().scan.distances;
+		for (int i = 0; i < distances.length; i++) {
+			float distance = distances[i];
+			System.out.println("distance "+i+": "+distance);
+		}
 	}
 
 	@Override

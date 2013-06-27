@@ -15,9 +15,9 @@ public class Start {
 		
 		BotSingleton.getInstance().nextAction = "scan";
 		Behavior b1 = new MakeScan();
-//		Behavior b2 = new DetectWall();
+		Behavior b2 = new WallAlign();
 		Behavior b3 = new Shutdown();
-		Behavior[] behaviorList = { b1, b3 };
+		Behavior[] behaviorList = { b1, b2, b3 };
 		Arbitrator arbitrator = new Arbitrator(behaviorList);
 		LCD.drawString("LegoSLAM Car", 0, 1);
 		Button.waitForAnyPress();
