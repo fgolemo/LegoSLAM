@@ -1,5 +1,7 @@
 package org.meicogsci.legobot1;
 
+import java.io.IOException;
+
 import lejos.nxt.remote.NXTCommand;
 import lejos.pc.comm.NXTComm;
 import lejos.pc.comm.NXTCommLogListener;
@@ -7,8 +9,9 @@ import lejos.pc.comm.NXTCommandConnector;
 import lejos.pc.comm.NXTConnector;
 
 public class NXTControl {
+	private NXTConnector conn;
 	public void init() {
-		NXTConnector conn = new NXTConnector();
+		conn = new NXTConnector();
 		conn.addLogListener(new NXTCommLogListener() {
 			public void logEvent(String message) {
 				System.out.println(message);
@@ -24,5 +27,14 @@ public class NXTControl {
 			System.exit(1);
 		}
 		NXTCommandConnector.setNXTCommand(new NXTCommand(conn.getNXTComm()));
+	}
+	
+	public void exit() {
+		try {
+			conn.close();
+		} catch (IOException e) {
+			System.out.println("Error while closing the connection");
+			e.printStackTrace();
+		}
 	}
 }
