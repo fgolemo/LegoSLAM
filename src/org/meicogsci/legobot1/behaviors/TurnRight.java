@@ -1,24 +1,35 @@
 package org.meicogsci.legobot1.behaviors;
+import org.meicogsci.legobot1.BotSingleton;
+import org.meicogsci.legobot1.Scan;
+import org.meicogsci.legobot1.State;
 
+import lejos.nxt.Motor;
 import lejos.robotics.subsumption.Behavior;
 
 public class TurnRight implements Behavior {
+	BotSingleton bot = BotSingleton.getInstance();
+	private boolean _suppressed = false;
 
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
-		return false;
+		return (bot.nextAction == "turn");
 	}
 
 	@Override
-	public void action() {
-		// TODO Auto-generated method stub
-
+	public void action() 
+	{
+		bot.nextAction = "";
+		Motor.B.setSpeed(360);
+        Motor.C.setSpeed(360);
+        Motor.B.rotate(180);
+    	Motor.C.rotate(-210);
+		bot.nextAction = "scan";
+		
 	}
 
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
+		_suppressed = true;
 
 	}
 
