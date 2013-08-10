@@ -9,7 +9,7 @@ public class Field {
     }
     
     public char getChar() {
-        char out = ' ';
+        char out = ' '; //─│┌┐└┘▒
         if (type.equals(FieldType.HORIZONTAL_WALL)) {
             out = '─';
         }
