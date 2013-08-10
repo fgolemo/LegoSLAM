@@ -23,7 +23,7 @@ public class Map {
 	public Field[][] fields = new Field[MAP_HEIGHT][MAP_WIDTH];
 	
 	public Map() {
-		this._fillUnknown();
+		//_fillUnknown(); // not needed as each field does this by default
 	}
 	
 	private void _fillUnknown() {
