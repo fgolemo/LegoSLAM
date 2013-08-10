@@ -14,10 +14,15 @@ public class Start {
 		nxtctrl.init(); //PC use
 		
 		BotSingleton.getInstance().nextAction = "scan";
-		Behavior b1 = new MakeScan();
-		Behavior b2 = new WallAlign();
-		Behavior b3 = new Shutdown();
-		Behavior[] behaviorList = { b1, b2, b3 };
+		Behavior makeScan = new MakeScan();
+		Behavior wallAlign = new WallAlign();
+		Behavior shutdown = new Shutdown();
+		Behavior turnRight = new TurnRight();
+		Behavior bumpDetected = new BumpDetected();
+		Behavior investigate = new InvestigateUnknown();
+		Behavior updateMap = new UpdateMap();
+		Behavior[] behaviorList = { makeScan, wallAlign, shutdown,
+				bumpDetected, turnRight,investigate, updateMap };
 		Arbitrator arbitrator = new Arbitrator(behaviorList);
 		LCD.drawString("LegoSLAM Car", 0, 1);
 		Button.waitForAnyPress();
