@@ -1,13 +1,16 @@
 package org.meicogsci.legobot1.behaviors;
 
+import org.meicogsci.legobot1.BotSingleton;
+
 import lejos.robotics.subsumption.Behavior;
 
 public class UpdateMap implements Behavior {
-
+	BotSingleton bot = BotSingleton.getInstance();
+	private boolean _suppressed = false;
+	
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
-		return false;
+		return (bot.nextAction == "map");
 	}
 
 	@Override
@@ -18,8 +21,7 @@ public class UpdateMap implements Behavior {
 
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
-
+		_suppressed = true;
 	}
 
 }

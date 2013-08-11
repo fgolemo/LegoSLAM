@@ -9,7 +9,8 @@ import lejos.robotics.subsumption.Behavior;
 public class MakeScan implements Behavior {
 	BotSingleton bot = BotSingleton.getInstance();
 	private boolean _suppressed = false;
-	
+	private Scan scan;
+
 	@Override
 	public boolean takeControl() {
 		return (bot.nextAction == "scan");
@@ -18,9 +19,12 @@ public class MakeScan implements Behavior {
 	@Override
 	public void action() {
 		bot.nextAction = "";
-		Scan scan = new Scan();
-		scan.doScan();
-		if (bot.history.states.size() == 0 || bot.history.states.getLast().scan.isDone == false) {
+		scan = new Scan();
+		while (!_suppressed && !scan.isDone) {
+			scan.doScan();
+		}
+		if (bot.history.states.size() == 0
+				|| bot.history.states.getLast().scan.isDone == false) {
 			State state = new State();
 			state.scan = scan;
 			bot.history.states.add(state);
@@ -33,6 +37,7 @@ public class MakeScan implements Behavior {
 	@Override
 	public void suppress() {
 		_suppressed = true;
+		scan.resetPos();
 	}
 
 }

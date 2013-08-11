@@ -13,8 +13,9 @@ public class Scan {
     private static final RemoteMotor US_MOTOR = Motor.A; // US motor port
     public float[] distances = new float[7]; // all in cm, range from ~3 - ~180. "255" equals error.
     private int[] angles = {-90, -60, -30, 0, 30, 60, 90};
+    private int lastAngle = 0;
     private UltrasonicSensor us;
-    public boolean isDone;
+    public boolean isDone = false;
 
     public Scan() {
         for (int i = 0; i < distances.length; i++) {
@@ -24,21 +25,27 @@ public class Scan {
         isDone = false;
     }
 
-    public void doScan() {
-        US_MOTOR.rotateTo(0);
-        try {
-            for (int i = 0; i < angles.length; i++) {
-                int angle = angles[i];
-                US_MOTOR.rotateTo(angle);
-                Thread.sleep(M_WAIT);
-                distances[i] = getMeasures(M_COUNT);
-            }
-        } catch (InterruptedException e) {
-            System.out.println("Measuring interrupted");
-        } finally {
-            US_MOTOR.rotateTo(0);
-            isDone = true;
+    public boolean doScan() {
+        if (lastAngle >= angles.length) {
+        	isDone = true;
+    		return false;
+        } else {
+        
+            int angle = angles[lastAngle];
+            US_MOTOR.rotateTo(angle);
+            distances[lastAngle] = getMeasures(M_COUNT);
+        	lastAngle++;
+        	try {
+				Thread.sleep(M_WAIT);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+            return true;
         }
+    }
+    
+    public void resetPos() {
+    	US_MOTOR.rotateTo(0);
     }
 
     private float getMeasures(int count) {

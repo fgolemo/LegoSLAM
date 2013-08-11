@@ -16,6 +16,7 @@ public class Start {
 
         BotSingleton.getInstance().nextAction = "scan";
         BotSingleton.getInstance().mapForm = new MapForm();
+        BotSingleton.getInstance().openMapWindow();
         
         Behavior makeScan = new MakeScan();
         Behavior wallAlign = new WallAlign();
