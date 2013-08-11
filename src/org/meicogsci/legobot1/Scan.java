@@ -12,8 +12,8 @@ public class Scan {
     private static final SensorPort US_PORT = SensorPort.S4; // US sensor port
     private static final RemoteMotor US_MOTOR = Motor.A; // US motor port
     public float[] distances = new float[7]; // all in cm, range from ~3 - ~180. "255" equals error.
-    private int[] angles = {-90, -60, -30, 0, 30, 60, 90};
-    private int lastAngle = 0;
+    public int[] angles = {-90, -60, -30, 0, 30, 60, 90};
+    public int lastAngle = 0;
     private UltrasonicSensor us;
     public boolean isDone = false;
 
