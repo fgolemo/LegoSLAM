@@ -1,7 +1,10 @@
 package org.meicogsci.legobot1.map;
 
+import org.meicogsci.legobot1.BotSingleton;
 import org.meicogsci.legobot1.Field;
 import org.meicogsci.legobot1.FieldType;
+import org.meicogsci.legobot1.Scan;
+import org.meicogsci.legobot1.State;
 
 public class Map {
 
@@ -33,5 +36,14 @@ public class Map {
                 fields[row][column].type = FieldType.UNKNOWN;
             }
         }
+    }
+    
+    public void updateFromLastScan() {
+    	State state = BotSingleton.getInstance().history.states.getLast();
+    	if (state.position.isAligned == false) {
+    		System.out.println("Sorry, can't update map, because Bot is not aligned");
+    	} else {
+    		
+    	}
     }
 }

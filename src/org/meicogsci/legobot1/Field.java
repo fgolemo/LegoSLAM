@@ -3,9 +3,12 @@ package org.meicogsci.legobot1;
 public class Field {
 
     public FieldType type;
+    
+    public int certainty;
 
     public Field() {
         this.type = FieldType.UNKNOWN;
+        this.certainty = 100;
     }
     
     public char getChar() {

@@ -21,7 +21,9 @@ public class MakeScan implements Behavior {
 		bot.nextAction = "";
 		scan = new Scan();
 		while (!_suppressed && !scan.isDone) {
-			scan.doScan();
+			boolean working = scan.doScan();
+			if (!working)
+				break;
 		}
 		if (bot.history.states.size() == 0
 				|| bot.history.states.getLast().scan.isDone == false) {
@@ -31,6 +33,7 @@ public class MakeScan implements Behavior {
 		} else {
 			bot.history.states.getLast().scan = scan;
 		}
+		bot.map.updateFromLastScan();
 		bot.nextAction = "align";
 	}
 
