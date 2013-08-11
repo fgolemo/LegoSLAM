@@ -22,7 +22,7 @@ public class TurnRight implements Behavior {
 		Motor.B.setSpeed(360);
         Motor.C.setSpeed(360);
         Motor.B.rotate(180);
-    	Motor.C.rotate(-210);
+    	Motor.C.rotate(-215);
 		bot.nextAction = "scan";
 		
 	}
