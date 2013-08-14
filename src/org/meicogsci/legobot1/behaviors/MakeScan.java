@@ -34,6 +34,7 @@ public class MakeScan implements Behavior {
 			bot.history.states.getLast().scan = scan;
 		}
 		bot.map.updateFromLastScan();
+		scan.resetPos();
 		bot.nextAction = "align";
 	}
 

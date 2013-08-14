@@ -54,12 +54,22 @@ public class Map {
 			state.position = newPos;
 		}
 		_drawOwnPosition(state.position);
+		_updateMapForm();
+		printMap();
 		BotSingleton.getInstance().history.states.getLast().position = state.position;
+	}
+	
+	private void _updateMapForm() {
+		Object val = BotSingleton.getInstance().mapForm.mapPanel.tableModel.getValueAt(0, 0);
+		BotSingleton.getInstance().mapForm.mapPanel.tableModel.setValueAt(val, 0, 0);
 	}
 
 	private Position _updateFromTriangle(Triangle tri, Position pos) {
+		System.out.println("Triangle: \n"+tri.leftAngle+" | "+tri.leftDistance + " | " +
+				tri.leftWallAngle + "\n"+tri.rightAngle+" | "+tri.rightDistance + " | " +
+				tri.rightWallAngle + "\n" + tri.isHorizontal + " | " + tri.mayHaveGap);
 		if (!tri.isHorizontal && !tri.isVertical) {
-			// Bresenham-Algo to fill blanks into fields between bot and wall 
+			// Bresenham-Algo to fill blanks into fields between bot and wall
 		}
 
 		if (!tri.mayHaveGap && tri.isHorizontal) {
@@ -69,13 +79,13 @@ public class Map {
 		}
 		return pos;
 	}
-	
+
 	private Position _drawHorzWall(Position pos, Coord start, Coord end) {
-		int y = (int) Math.ceil(start.y/UNITLENGTH);
+		int y = (int) Math.ceil(start.y / UNITLENGTH);
 		if (pos.angle.equals(Direction.UP))
 			y = -y;
-		int xStart = (int) Math.ceil(start.x/UNITLENGTH);
-		int xEnd = (int) Math.ceil(end.x/UNITLENGTH);
+		int xStart = (int) Math.ceil(start.x / UNITLENGTH);
+		int xEnd = (int) Math.ceil(end.x / UNITLENGTH);
 		int yDiff = pos.y + y;
 		int xDiffStart = pos.x + xStart;
 		int xDiffEnd = pos.x + xEnd;
@@ -92,14 +102,14 @@ public class Map {
 			_shitftMapRightLeft(xDiffStart);
 			pos.x = pos.x - xDiffStart;
 			xDiffStart = 0;
-		} else if (xDiffEnd >= MAP_WIDTH ) {
+		} else if (xDiffEnd >= MAP_WIDTH) {
 			_shitftMapRightLeft(xDiffEnd);
 			pos.x = pos.x - xDiffEnd;
 			xDiffEnd = MAP_WIDTH - 1;
 		}
 		for (int x = xDiffStart; x <= xDiffEnd; x++) {
-			if (!fields[yDiff][x].type.equals(FieldType.HORIZONTAL_WALL)) { 
-				//TODO: implement this better, using existing certainty
+			if (!fields[yDiff][x].type.equals(FieldType.HORIZONTAL_WALL)) {
+				// TODO: implement this better, using existing certainty
 				fields[yDiff][x].type = FieldType.HORIZONTAL_WALL;
 				fields[yDiff][x].certainty = 50;
 			} else {
@@ -108,67 +118,71 @@ public class Map {
 		}
 		return pos;
 	}
-	
+
 	private void _shitftMapUpDown(int steps) {
 		if (steps < 0) { // => shift down, start bottom
-			for (int row = fields.length-1; row >= 0; row--) {
+			for (int row = fields.length - 1; row >= 0; row--) {
 				for (int column = 0; column < fields[row].length; column++) {
 					Field fieldNew;
-					if (row + steps < 0) 
-						fieldNew = new Field(); 
+					if (row + steps < 0)
+						fieldNew = new Field();
 					else
-						fieldNew = fields[row+steps][column];
-					fields[row][column] =  fieldNew;
+						fieldNew = fields[row + steps][column];
+					fields[row][column] = fieldNew;
 				}
 			}
-		} else { //shift up, start top
+		} else { // shift up, start top
 			for (int row = 0; row < fields.length; row++) {
 				for (int column = 0; column < fields[row].length; column++) {
 					Field fieldNew;
-					if (row + steps >= MAP_HEIGHT) 
-						fieldNew = new Field(); 
+					if (row + steps >= MAP_HEIGHT)
+						fieldNew = new Field();
 					else
-						fieldNew = fields[row+steps][column];
-					fields[row][column] =  fieldNew;
+						fieldNew = fields[row + steps][column];
+					fields[row][column] = fieldNew;
 				}
 			}
 		}
 	}
-	
+
 	private void _shitftMapRightLeft(int steps) {
-		if (steps < 0) { //shift right, start right
+		if (steps < 0) { // shift right, start right
 			for (int row = 0; row < fields.length; row++) {
-				for (int column = fields[row].length-1; column >= 0 ; column--) {
+				for (int column = fields[row].length - 1; column >= 0; column--) {
 					Field fieldNew;
-					if (column + steps < 0) 
-						fieldNew = new Field(); 
+					if (column + steps < 0)
+						fieldNew = new Field();
 					else
-						fieldNew = fields[steps][column+steps];
-					fields[row][column] =  fieldNew;
+						fieldNew = fields[steps][column + steps];
+					fields[row][column] = fieldNew;
 				}
 			}
-		} else { //shift left, start left
+		} else { // shift left, start left
 			for (int row = 0; row < fields.length; row++) {
 				for (int column = 0; column < fields[row].length; column++) {
 					Field fieldNew;
-					if (column + steps >= MAP_WIDTH) 
-						fieldNew = new Field(); 
+					if (column + steps >= MAP_WIDTH)
+						fieldNew = new Field();
 					else
-						fieldNew = fields[row][column+steps];
-					fields[row][column] =  fieldNew;
+						fieldNew = fields[row][column + steps];
+					fields[row][column] = fieldNew;
 				}
 			}
 		}
 	}
-	
+
 	private void _drawOwnPosition(Position pos) {
 		Coord lastPos = _getLastPosition();
-		fields[(int) lastPos.y][(int) lastPos.x] = new Field(); // = empty & 100% sure
+		if (lastPos != null) {
+			fields[(int) lastPos.y][(int) lastPos.x] = new Field(); // = empty &
+																	// 100% sure
+		}
 		fields[(int) pos.y][(int) pos.x].type = FieldType.POSITION;
-		fields[(int) pos.y][(int) pos.x].certainty = 50; // why not 100? Could not be 
-		
+		fields[(int) pos.y][(int) pos.x].certainty = 50; // why not 100? Could
+															// not be
+
 	}
-	
+
 	private Coord _getLastPosition() {
 		for (int row = 0; row < fields.length; row++) {
 			for (int column = 0; column < fields[row].length; column++) {
@@ -177,5 +191,14 @@ public class Map {
 			}
 		}
 		return null;
+	}
+
+	public void printMap() {
+		for (int row = 0; row < fields.length; row++) {
+			for (int column = 0; column < fields[row].length; column++) {
+				System.out.print(fields[row][column].getChar());
+			}
+			System.out.print("\n");
+		}
 	}
 }

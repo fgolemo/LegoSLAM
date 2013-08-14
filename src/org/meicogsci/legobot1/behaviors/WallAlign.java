@@ -3,12 +3,10 @@ package org.meicogsci.legobot1.behaviors;
 import lejos.robotics.subsumption.Behavior;
 import org.meicogsci.legobot1.BotSingleton;
 import org.meicogsci.legobot1.State;
-import org.meicogsci.legobot1.Field;
-import org.meicogsci.legobot1.FieldType;
 
 public class WallAlign implements Behavior {
 	BotSingleton bot = BotSingleton.getInstance();
-	State state = BotSingleton.getInstance().history.states.getLast();
+	State state;
 
 	private boolean _suppressed = false;
 	
@@ -19,6 +17,7 @@ public class WallAlign implements Behavior {
 
 	@Override
 	public void action() {
+		state = bot.history.states.getLast();
 		bot.nextAction = "";
 		float[] distances = bot.history.states.getLast().scan.distances;
 		for (int i = 0; i < distances.length; i++) {

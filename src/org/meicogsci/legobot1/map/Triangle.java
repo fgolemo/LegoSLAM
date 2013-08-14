@@ -26,7 +26,7 @@ public class Triangle {
 	public void calc() {
 		double lsq = Math.pow(leftDistance, 2);
 		double rsq = Math.pow(rightDistance, 2);
-		wallLength = Math.sqrt(lsq + rsq - (Math.sqrt(2) * lsq * rsq));
+		wallLength = Math.sqrt(lsq + rsq - (2 * leftDistance * rightDistance * Math.cos( Math.abs(leftAngle - rightAngle) )));
 		leftWallAngle = Math.acos((Math.pow(wallLength, 2) + lsq - rsq)
 				/ (2 * lsq * wallLength));
 		rightWallAngle = 180 - 30 - leftWallAngle;
