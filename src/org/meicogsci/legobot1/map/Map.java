@@ -1,8 +1,6 @@
 package org.meicogsci.legobot1.map;
 
 import org.meicogsci.legobot1.BotSingleton;
-import org.meicogsci.legobot1.Field;
-import org.meicogsci.legobot1.FieldType;
 import org.meicogsci.legobot1.Position;
 import org.meicogsci.legobot1.Scan;
 import org.meicogsci.legobot1.State;
@@ -45,12 +43,6 @@ public class Map {
 
 	public void updateFromLastScan() {
 		State state = BotSingleton.getInstance().history.states.getLast();
-//		if (state.position.angle != 90 && state.position.angle != 180
-//				&& state.position.angle != 270 && state.position.angle != 0) {
-//			System.out
-//					.println("Sorry, can't update map, because Bot is not aligned");
-//			return;
-//		}
 		for (int i = 0; i < state.scan.lastAngle - 1; i++) {
 			int leftAngle = state.scan.angles[i];
 			int rightAngle = state.scan.angles[i + 1];
@@ -58,12 +50,14 @@ public class Map {
 			float rightDistance = state.scan.distances[i + 1];
 			Triangle tri = new Triangle(leftAngle, rightAngle, leftDistance,
 					rightDistance);
-			_updateFromTriangle(tri, state.position);
+			Position newPos = _updateFromTriangle(tri, state.position);
+			state.position = newPos;
 		}
-
+		_drawOwnPosition(state.position);
+		BotSingleton.getInstance().history.states.getLast().position = state.position;
 	}
 
-	private void _updateFromTriangle(Triangle tri, Position pos) {
+	private Position _updateFromTriangle(Triangle tri, Position pos) {
 		if (!tri.isHorizontal && !tri.isVertical) {
 			// Bresenham-Algo to fill blanks into fields between bot and wall 
 		}
@@ -71,11 +65,12 @@ public class Map {
 		if (!tri.mayHaveGap && tri.isHorizontal) {
 			Coord left = tri.getLeftCoords(pos.angle, "left");
 			Coord right = tri.getLeftCoords(pos.angle, "right");
-			_drawHorzWall(pos, left, right);
+			return _drawHorzWall(pos, left, right);
 		}
+		return pos;
 	}
 	
-	private void _drawHorzWall(Position pos, Coord start, Coord end) {
+	private Position _drawHorzWall(Position pos, Coord start, Coord end) {
 		int y = (int) Math.ceil(start.y/UNITLENGTH);
 		if (pos.angle.equals(Direction.UP))
 			y = -y;
@@ -84,15 +79,34 @@ public class Map {
 		int yDiff = pos.y + y;
 		int xDiffStart = pos.x + xStart;
 		int xDiffEnd = pos.x + xEnd;
+		boolean posChanged = false;
 		if (yDiff < 0 || yDiff >= MAP_HEIGHT) {
 			_shitftMapUpDown(yDiff);
+			pos.y = pos.y - yDiff;
+			if (yDiff < 0)
+				yDiff = 0;
+			else
+				yDiff = MAP_HEIGHT - 1;
 		}
 		if (xDiffStart < 0) {
 			_shitftMapRightLeft(xDiffStart);
-		}
-		if (xDiffEnd >= MAP_WIDTH ) {
+			pos.x = pos.x - xDiffStart;
+			xDiffStart = 0;
+		} else if (xDiffEnd >= MAP_WIDTH ) {
 			_shitftMapRightLeft(xDiffEnd);
+			pos.x = pos.x - xDiffEnd;
+			xDiffEnd = MAP_WIDTH - 1;
 		}
+		for (int x = xDiffStart; x <= xDiffEnd; x++) {
+			if (!fields[yDiff][x].type.equals(FieldType.HORIZONTAL_WALL)) { 
+				//TODO: implement this better, using existing certainty
+				fields[yDiff][x].type = FieldType.HORIZONTAL_WALL;
+				fields[yDiff][x].certainty = 50;
+			} else {
+				fields[yDiff][x].certainty += 25;
+			}
+		}
+		return pos;
 	}
 	
 	private void _shitftMapUpDown(int steps) {
@@ -147,7 +161,21 @@ public class Map {
 		}
 	}
 	
-	private void _drawOwnPosition(int steps) {
-
+	private void _drawOwnPosition(Position pos) {
+		Coord lastPos = _getLastPosition();
+		fields[(int) lastPos.y][(int) lastPos.x] = new Field(); // = empty & 100% sure
+		fields[(int) pos.y][(int) pos.x].type = FieldType.POSITION;
+		fields[(int) pos.y][(int) pos.x].certainty = 50; // why not 100? Could not be 
+		
+	}
+	
+	private Coord _getLastPosition() {
+		for (int row = 0; row < fields.length; row++) {
+			for (int column = 0; column < fields[row].length; column++) {
+				if (fields[row][column].type.equals(FieldType.POSITION))
+					return new Coord(column, row);
+			}
+		}
+		return null;
 	}
 }

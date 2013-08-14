@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.table.AbstractTableModel;
 import org.meicogsci.legobot1.BotSingleton;
-import org.meicogsci.legobot1.Field;
-import org.meicogsci.legobot1.FieldType;
 
 /**
  *

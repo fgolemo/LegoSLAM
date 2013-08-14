@@ -1,4 +1,5 @@
-package org.meicogsci.legobot1;
+package org.meicogsci.legobot1.map;
+
 
 public class Field {
 
