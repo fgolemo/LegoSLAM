@@ -2,9 +2,14 @@ package org.meicogsci.legobot1.behaviors;
 
 import lejos.robotics.subsumption.Behavior;
 import org.meicogsci.legobot1.BotSingleton;
+import org.meicogsci.legobot1.State;
+import org.meicogsci.legobot1.Field;
+import org.meicogsci.legobot1.FieldType;
 
 public class WallAlign implements Behavior {
 	BotSingleton bot = BotSingleton.getInstance();
+	State state = BotSingleton.getInstance().history.states.getLast();
+
 	private boolean _suppressed = false;
 	
 	@Override
@@ -20,6 +25,14 @@ public class WallAlign implements Behavior {
 			float distance = distances[i];
 			System.out.println("distance "+i+": "+distance);
 		}
+		for (int i = state.scan.lastAngle - 7; i < state.scan.lastAngle - 1; i++) {
+			int leftAngle = state.scan.angles[i];
+			int rightAngle = state.scan.angles[i + 1];
+			float leftDistance = state.scan.distances[i];
+			float rightDistance = state.scan.distances[i + 1];
+			
+			//add code for measuring straight lines and align with 36 and -43 degrees
+			}
 	}
 
 	@Override
