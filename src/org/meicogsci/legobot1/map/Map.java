@@ -22,7 +22,7 @@ public class Map {
 	/**
 	 * error rate in full degrees
 	 */
-	public static final int ERROR_RATE = 2;
+	public static final int ERROR_RATE = 5;
 	/**
 	 * field[row][column], each field taking up UNITLENGTH cm
 	 */

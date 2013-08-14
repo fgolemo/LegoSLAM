@@ -27,8 +27,11 @@ public class Triangle {
 		double lsq = Math.pow(leftDistance, 2);
 		double rsq = Math.pow(rightDistance, 2);
 		wallLength = Math.sqrt(lsq + rsq - (2 * leftDistance * rightDistance * Math.cos( Math.abs(leftAngle - rightAngle) )));
-		leftWallAngle = Math.acos((Math.pow(wallLength, 2) + lsq - rsq)
-				/ (2 * lsq * wallLength));
+		/*leftWallAngle = Math.acos((Math.pow(wallLength, 2) + lsq - rsq)
+				/ (2 * lsq * wallLength));*/
+		double wsq = Math.pow(wallLength, 2);
+		leftWallAngle = Math.acos((rsq - wsq - lsq) /(-2*wallLength*leftDistance)); //gives radians
+		leftWallAngle = (leftWallAngle * 360) / (2*Math.PI);
 		rightWallAngle = 180 - 30 - leftWallAngle;
 		if (wallLength > Map.UNITLENGTH)
 			mayHaveGap = true;
