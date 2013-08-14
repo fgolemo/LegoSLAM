@@ -4,7 +4,6 @@ import org.meicogsci.legobot1.BotSingleton;
 import org.meicogsci.legobot1.Position;
 import org.meicogsci.legobot1.Scan;
 import org.meicogsci.legobot1.State;
-
 public class Map {
 
 	/**
