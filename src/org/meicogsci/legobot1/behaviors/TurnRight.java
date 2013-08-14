@@ -19,10 +19,12 @@ public class TurnRight implements Behavior {
 	public void action() 
 	{
 		bot.nextAction = "";
+		System.out.println("helloturnright");
 		Motor.B.setSpeed(360);
         Motor.C.setSpeed(360);
         Motor.B.rotate(180);
     	Motor.C.rotate(-215);
+        
 		bot.nextAction = "scan";
 		
 	}
